@@ -11,18 +11,18 @@ import org.bukkit.inventory.Inventory;
 import com.gmail.akashirt53072.newauctions.Main;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 
-public class GuiBuyConfirm extends Gui{
-	public GuiBuyConfirm(Main plugin, Player player) {
+public class GuiCancelConfirm extends Gui{
+	public GuiCancelConfirm(Main plugin, Player player) {
 		super(plugin, player);
 	}
-	public GuiBuyConfirm(Main plugin, Player player,Inventory inventory) {
+	public GuiCancelConfirm(Main plugin, Player player,Inventory inventory) {
 		super(plugin, player,inventory);
 	}
 	
 	@Override
 	public void create() {
 		new NBTGui(plugin,player).setID(GuiID.BUYCONFIRM);
-		inv = Bukkit.createInventory(null, 27, "確認：アイテムを購入しますか？");
+		inv = Bukkit.createInventory(null, 27, "確認：出品中のアイテムを回収しますか？");
 		for(int index = 0;index < 27;index ++) {
 			switch(index){
 			case 11:
@@ -43,13 +43,13 @@ public class GuiBuyConfirm extends Gui{
 		case 11:
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			close();
-			//非同期でアイテムデータ読み込んで削除と与える、送金、購入リスト開く処理をする
+			//非同期でアイテムデータ読み込んで削除と与える、売却リスト開く処理をする
 			
 			break;
 		case 15:
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			close();
-			new GuiBuyItem(plugin,player).create();
+			new GuiCancelOrder(plugin,player).create();
 			break;
 		}
 	}

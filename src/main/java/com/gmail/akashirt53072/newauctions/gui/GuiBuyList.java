@@ -79,7 +79,7 @@ public class GuiBuyList extends Gui{
 		case 6:
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			close();
-			
+			new GuiAddItem(plugin,player).create();
 			break;
 		case 45:
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);

@@ -29,10 +29,10 @@ public class GuiBuyItem extends Gui{
 			case 13:
 				break;
 			case 11:
-				inv.setItem(index, createItem(Material.GLOW_ITEM_FRAME,ChatColor.WHITE + "購入メニュー",null,1,Enchantment.MENDING));
+				inv.setItem(index, createItem(Material.LIME_WOOL,ChatColor.WHITE + "決定",null,1,Enchantment.MENDING));
 				break;
 			case 15:
-				inv.setItem(index, createItem(Material.CHEST_MINECART,ChatColor.WHITE + "売却中アイテム一覧へ",null,1,null));
+				inv.setItem(index, createItem(Material.ARROW,ChatColor.WHITE + "戻る",null,1,null));
 				break;
 			default:
 				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE,"",null,1,null));
