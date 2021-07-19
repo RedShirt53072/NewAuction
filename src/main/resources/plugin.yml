@@ -1,0 +1,17 @@
+main: "com.gmail.akashirt53072.newauctions.Main"
+name: "NewAuctions"
+version: "0.0.0"
+api-version: "1.17"
+commands:
+  auction:
+    description: auction command
+    usage: /auction
+    permission: newauction.normal
+permissions:
+  newauction.normal:
+    description: all player
+    default: true
+  newauction.*:
+    description: commands
+    children:
+      newauction.normal: true
