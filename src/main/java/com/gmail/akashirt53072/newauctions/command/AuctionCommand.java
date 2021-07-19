@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.gmail.akashirt53072.newauctions.Main;
+import com.gmail.akashirt53072.newauctions.gui.GuiBuyList;
 
 
 public class AuctionCommand implements CommandExecutor{
@@ -21,7 +22,7 @@ public class AuctionCommand implements CommandExecutor{
 		if (sender instanceof Player) {
             Player player = (Player) sender;
             //opengui
-            
+            new GuiBuyList(plugin,player).create();
             
             return true;
 		}

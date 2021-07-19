@@ -46,7 +46,7 @@ public class GuiBuyList extends Gui{
 			case 50:
 			case 51:
 			case 52:
-				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE,"",null,1,null));
+				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE," ",null,1,null));
 				break;
 			case 2:
 				inv.setItem(index, createItem(Material.GLOW_ITEM_FRAME,ChatColor.WHITE + "購入メニュー",null,1,Enchantment.MENDING));

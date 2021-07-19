@@ -21,7 +21,7 @@ public class GuiItemSold extends Gui{
 	
 	@Override
 	public void create() {
-		new NBTGui(plugin,player).setID(GuiID.BUYLIST);
+		new NBTGui(plugin,player).setID(GuiID.ITEMSOLD);
 		inv = Bukkit.createInventory(null, 27, "アイテムの売却が完了しました");
 		for(int index = 0;index < 27;index ++) {
 			switch(index){
@@ -37,7 +37,7 @@ public class GuiItemSold extends Gui{
 				inv.setItem(index, createItem(Material.ARROW,ChatColor.WHITE + "戻る",null,1,null));
 				break;
 			default:
-				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE,"",null,1,null));
+				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE," ",null,1,null));
 			}
 		}
 		player.openInventory(inv);

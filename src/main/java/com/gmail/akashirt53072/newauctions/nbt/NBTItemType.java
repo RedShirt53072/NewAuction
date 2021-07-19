@@ -16,7 +16,7 @@ public class NBTItemType extends ItemNBTLoader{
     	super.writeString("itemType", type.toString());
     }
     
-    
+
     public ItemType getType() {
     	String setting = super.readString("itemType");
     	if(setting == null) {

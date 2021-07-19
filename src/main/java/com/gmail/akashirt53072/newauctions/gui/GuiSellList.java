@@ -51,7 +51,7 @@ public class GuiSellList extends Gui{
 				inv.setItem(index, createItem(Material.HOPPER,ChatColor.WHITE + "新規出品メニューへ",null,1,null));
 				break;
 			default:
-				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE,"",null,1,null));
+				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE," ",null,1,null));
 			}
 		}
 		player.openInventory(inv);

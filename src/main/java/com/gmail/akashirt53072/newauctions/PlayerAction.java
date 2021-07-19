@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.gmail.akashirt53072.newauctions.gui.GuiAddItem;
 import com.gmail.akashirt53072.newauctions.gui.GuiBuyConfirm;
@@ -18,8 +19,13 @@ import com.gmail.akashirt53072.newauctions.gui.GuiItemExpired;
 import com.gmail.akashirt53072.newauctions.gui.GuiItemSold;
 import com.gmail.akashirt53072.newauctions.gui.GuiSellConfirm;
 import com.gmail.akashirt53072.newauctions.gui.GuiSellList;
+import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public final class PlayerAction implements Listener {
@@ -30,16 +36,55 @@ public final class PlayerAction implements Listener {
     }
     
     @EventHandler
-    public void onInventoryClick(final AsyncPlayerChatEvent event) {
+    public void onPlayerChat(final AsyncPlayerChatEvent event) {
     	Player player = event.getPlayer();
     	GuiID id = new NBTGui(plugin,player).getID();
         if(!id.equals(GuiID.EDITPRICE)) {
         	return;
         }
-        String price = event.getMessage();
-        //チャット処理
-        
+        event.setCancelled(true);
+        Bukkit.getScheduler().runTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+            	//in minecraft
+                String price = event.getMessage();
+                //チャット処理
+                int length = price.length();
+                if(length == 0 || length > 10) {
+                	player.sendMessage(ChatColor.RED + price + "は長すぎます");
+                	new GuiAddItem(plugin,player).create();
+                	return;
+                }
+                ArrayList<String> numberData = new ArrayList<String>();
+                for(int i = 0;i < price.length();i ++) {
+                 	char c = price.charAt(i);
+                 	String ca = String.valueOf(c);
+                 	if(ca.matches("[0-9]")) {
+                 		numberData.add(ca);
+                 	}
+                }
+                if(numberData.isEmpty()) {
+                	player.sendMessage(ChatColor.RED + price + "には数字がありません");
+                	new GuiAddItem(plugin,player).create();
+                	return;
+                }
+                int result = 0;
+                int size = numberData.size();
+                for(int i = 0;i < size;i ++) {
+                	int m = (int)Math.pow(10, size - 1 - i);
+                	 result += Integer.valueOf(numberData.get(i)) * m;
+                }
+                if(result < 1) {
+                	player.sendMessage(ChatColor.RED + price + "は0以下です");
+                	new GuiAddItem(plugin,player).create();
+                	return;
+                }
+                new NBTAddItem(plugin,player).setPrice(result);
+                new GuiAddItem(plugin,player).create();
+            }
+    	});
     }
+    
     //インベントリ内クリック
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event) {
@@ -90,7 +135,19 @@ public final class PlayerAction implements Listener {
         case ADDITEM:
     		GuiAddItem menu9 = new GuiAddItem(plugin,player);
     		menu9.onClick(slot);
-            event.setCancelled(true);
+    		if(slot > 53) {
+    			ItemStack item = event.getCurrentItem();
+    			if(menu9.onInvClick(item)) {
+    				Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                        	//in minecraft
+                        	player.getOpenInventory().getBottomInventory().remove(item);
+                        }
+                	});
+    			}
+    		}
+    		event.setCancelled(true);
             break;
         case SELLCONFIRM:
     		GuiSellConfirm menu10 = new GuiSellConfirm(plugin,player);

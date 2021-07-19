@@ -21,7 +21,7 @@ public class GuiItemExpired extends Gui{
 	
 	@Override
 	public void create() {
-		new NBTGui(plugin,player).setID(GuiID.BUYLIST);
+		new NBTGui(plugin,player).setID(GuiID.ITEMEXPIRED);
 		inv = Bukkit.createInventory(null, 27, "アイテムの出品期限が切れました");
 		for(int index = 0;index < 27;index ++) {
 			switch(index){
@@ -37,7 +37,7 @@ public class GuiItemExpired extends Gui{
 				inv.setItem(index, createItem(Material.ARROW,ChatColor.WHITE + "戻る",null,1,null));
 				break;
 			default:
-				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE,"",null,1,null));
+				inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE," ",null,1,null));
 			}
 		}
 		player.openInventory(inv);

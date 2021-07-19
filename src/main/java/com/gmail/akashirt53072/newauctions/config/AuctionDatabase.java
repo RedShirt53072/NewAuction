@@ -12,7 +12,7 @@ import com.gmail.akashirt53072.newauctions.AuctionItemData;
 public class AuctionDatabase extends DataConfig{
 
 	public AuctionDatabase(Plugin plugin) {
-		super(plugin,"itemdata.yml");
+		super(plugin,"allauctiondata.yml");
 	}
 
 	public void addItem(UUID uuid,ItemStack nbt,int price){	

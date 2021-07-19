@@ -2,6 +2,7 @@ package com.gmail.akashirt53072.newauctions;
 
 import org.bukkit.event.Listener;
 
+import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -23,10 +24,7 @@ public final class PlayerLogin implements Listener {
     public void getLoginPlayer(PlayerLoginEvent event) {
     	Player player = event.getPlayer();
     	new NBTGui(plugin,player).init();
-    	
-    	//tickLoop
-		//new PlayerTick(plugin,player).runTaskLater(plugin,1);
-    	
+    	new NBTAddItem(plugin,player).init();
     	
     }
     @EventHandler(priority = EventPriority.NORMAL)

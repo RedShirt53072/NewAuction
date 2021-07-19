@@ -10,7 +10,9 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
-		new ConfigLoader(this,"itemdata.yml").saveDefaultConfig();
+		new ConfigLoader(this,"allauctiondata.yml").saveDefaultConfig();
+		new ConfigLoader(this,"preadddata.yml").saveDefaultConfig();
+		new ConfigLoader(this,"storagedata.yml").saveDefaultConfig();
 		new ConfigLoader(this,"general.yml").saveDefaultConfig();
 		
 		new PlayerLogin(this);
