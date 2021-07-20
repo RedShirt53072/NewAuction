@@ -1,5 +1,6 @@
 package com.gmail.akashirt53072.newauctions.gui;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -12,8 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.gmail.akashirt53072.newauctions.Main;
-import com.gmail.akashirt53072.newauctions.PlayerItemData;
+import com.gmail.akashirt53072.newauctions.StorageSystem;
 import com.gmail.akashirt53072.newauctions.config.PreAddDatabase;
+import com.gmail.akashirt53072.newauctions.datatype.PlayerItemData;
 import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 
@@ -40,7 +42,7 @@ public class GuiAddItem extends Gui{
 				break;
 			case 31:
 				int price = new NBTAddItem(plugin,player).getPrice();
-				inv.setItem(index, createItem(Material.GOLD_NUGGET,ChatColor.WHITE + "売却価格：" + price +"$",null,1,null));
+				inv.setItem(index, createItem(Material.GOLD_NUGGET,ChatColor.WHITE + "売却価格："+ ChatColor.GOLD + price +"$",null,1,null));
 				break;
 			case 2:
 				inv.setItem(index, createItem(Material.GLOW_ITEM_FRAME,ChatColor.WHITE + "購入メニューへ",null,1,null));
@@ -53,7 +55,11 @@ public class GuiAddItem extends Gui{
 				break;
 			case 38:
 				if(hasPreItem) {
-					inv.setItem(index, createItem(Material.LIME_WOOL,ChatColor.WHITE + "決定",null,1,null));
+					if(new NBTAddItem(plugin,player).getSellingItem() < 15){
+                		inv.setItem(38, createItem(Material.LIME_WOOL,ChatColor.WHITE + "決定",null,1,null));
+                	}else {
+                		inv.setItem(38, createItem(Material.BARRIER,ChatColor.RED + "出品数が上限に達しています",null,1,null));
+                	}
 				}else {
 					inv.setItem(index, createItem(Material.BLACK_STAINED_GLASS_PANE," ",null,1,null));
 				}
@@ -91,7 +97,7 @@ public class GuiAddItem extends Gui{
 	                    		return;
 	                    	}
 	                    	ItemStack item = itemData.getItem();
-	                    	if(new NBTGui(plugin,player).getID().equals(GuiID.NONE)) {
+	                    	if(!new NBTGui(plugin,player).getID().equals(GuiID.ADDITEM)) {
 	                    		return;
 	                    	}
 	                    	inv = player.getOpenInventory().getTopInventory();
@@ -117,9 +123,13 @@ public class GuiAddItem extends Gui{
 			break;
 		case 38:
 			if(new NBTAddItem(plugin,player).hasPreItem()) {
-				player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
-				close();
-				new GuiSellConfirm(plugin,player).create();
+				if(new NBTAddItem(plugin,player).getSellingItem() < 15){
+					player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
+					close();
+					new GuiSellConfirm(plugin,player).create();
+            	}else {
+            		player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, (float)0.5);
+            	}
 			}
 			break;
 		case 40:
@@ -154,8 +164,9 @@ public class GuiAddItem extends Gui{
 		                    		return;
 		                    	}
 		                    	ItemStack item = itemData.getItem();
-		                    	//storageシステムに移行すべし
-		                    	player.getInventory().addItem(item);
+		                    	ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		                    	items.add(item);
+		                    	new StorageSystem(plugin,player).giveItem(items);
 		                    }
 		            	});
 		            }
@@ -188,11 +199,15 @@ public class GuiAddItem extends Gui{
                     public void run() {
                     	//in minecraft
                     	new NBTAddItem(plugin,player).setPreItem(true);
-                    	if(new NBTGui(plugin,player).getID().equals(GuiID.NONE)) {
+                    	if(!new NBTGui(plugin,player).getID().equals(GuiID.ADDITEM)) {
                     		return;
                     	}
                     	inv = player.getOpenInventory().getTopInventory();
-                    	inv.setItem(38, createItem(Material.LIME_WOOL,ChatColor.WHITE + "決定",null,1,null));
+                    	if(new NBTAddItem(plugin,player).getSellingItem() < 15){
+                    		inv.setItem(38, createItem(Material.LIME_WOOL,ChatColor.WHITE + "決定",null,1,null));
+                    	}else {
+                    		inv.setItem(38, createItem(Material.BARRIER,ChatColor.RED + "出品数が上限に達しています",null,1,null));
+                    	}
                     	inv.setItem(42, createItem(Material.ARROW,ChatColor.WHITE + "キャンセル",null,1,null));
                     	inv.setItem(22, item);
                     }

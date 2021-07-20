@@ -3,8 +3,12 @@ name: "NewAuctions"
 version: "0.0.0"
 api-version: "1.17"
 commands:
+  storage: 
+    description: give storage item
+    usage: /storage
+    permission: newauction.normal
   auction:
-    description: auction command
+    description: open auction
     usage: /auction
     permission: newauction.normal
 permissions:

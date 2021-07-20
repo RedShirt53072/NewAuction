@@ -12,6 +12,7 @@ public class NBTAddItem extends NBTLoader{
     public void init() {
     	super.writeInt("itemPrice", 100);
     	super.writeInt("hasPreItem", 0);
+    	super.writeInt("sellingItem", 0);
     }
     public void setPreItem(boolean hasItem) {
     	if(hasItem) {
@@ -24,12 +25,28 @@ public class NBTAddItem extends NBTLoader{
     	super.writeInt("itemPrice", price);
     }
     
+    public void addSellingItem(int count) {
+    	super.writeInt("sellingItem", count);
+    }
+    
+    
     public boolean hasPreItem() {
     	int result = super.readInt("hasPreItem");
     	if(result == 1) {
     		return true;
     	}
     	return false;
+    }
+    
+    public int getSellingItem() {
+    	int result = super.readInt("sellingItem");
+    	if(result < 0) {
+    		return 0;
+    	}
+    	if(result > 15) {
+    		return 15;
+    	}
+    	return result;
     }
     
     public int getPrice() {

@@ -9,50 +9,25 @@ import org.bukkit.plugin.Plugin;
 import com.gmail.akashirt53072.newauctions.datatype.AuctionItemData;
 
 
-public class AuctionDatabase extends DataConfig{
+public class ExpiredDatabase extends DataConfig{
 
-	public AuctionDatabase(Plugin plugin) {
-		super(plugin,"allauctiondata.yml");
-	}
-	private int getNextID() {
-		int id = getIntData("id");
-		id ++;
-		setData("id",id);
-		return id;
+	public ExpiredDatabase(Plugin plugin) {
+		super(plugin,"expireditem.yml");
 	}
 	public int getIndex() {
 		return getNextIndex("item") - 1;
 	}
 	
-	public void addItem(UUID uuid,ItemStack nbt,int price){	
+	public void addItem(UUID uuid,ItemStack nbt,int price,int id){	
 		String path = "item";
 		int index = getNextIndex(path);
-		int id = getNextID();
 		path = path + index;
 		setData(path + ".UUID",uuid.toString());
 		setData(path + ".NBT",nbt);
-		setData(path + ".time",0);
 		setData(path + ".price",price);
 		setData(path + ".id",id);
 	}
 	
-	public ArrayList<AuctionItemData> getItem(int start, int end){	
-		int index = getNextIndex("item");
-		if(index > end) {
-			index = end;
-		}
-		ArrayList<AuctionItemData> data = new ArrayList<AuctionItemData>();
-		for(int i = start;i < index;i ++) {
-			String path = "item" + i;
-			int price = getIntData(path + ".price");
-			int time = getIntData(path + ".time");
-			int id = getIntData(path + ".id");
-			ItemStack item = getItem(path + ".NBT");
-			UUID uuid = UUID.fromString(getStringData(path + ".UUID"));
-			data.add(new AuctionItemData(price,time,item,uuid,id));
-		}
-		return data;
-	}
 	
 	public AuctionItemData getIDItem(int id){	
 		int index = getNextIndex("item");
@@ -65,9 +40,8 @@ public class AuctionDatabase extends DataConfig{
 			}
 			UUID uuid = UUID.fromString(getStringData(path + ".UUID"));
 			int price = getIntData(path + ".price");
-			int time = getIntData(path + ".time");
 			ItemStack item = getItem(path + ".NBT");
-			data = new AuctionItemData(price,time,item,uuid,id);
+			data = new AuctionItemData(price,0,item,uuid,id);
 		}
 		return data;
 	}
@@ -82,34 +56,13 @@ public class AuctionDatabase extends DataConfig{
 				continue;
 			}
 			int price = getIntData(path + ".price");
-			int time = getIntData(path + ".time");
 			int id = getIntData(path + ".id");
 			ItemStack item = getItem(path + ".NBT");
-			data.add(new AuctionItemData(price,time,item,uuid,id));
+			data.add(new AuctionItemData(price,0,item,uuid,id));
 		}
 		return data;
 	}
 	
-	public ArrayList<AuctionItemData> addTime(){	
-		int index = getNextIndex("item");
-		ArrayList<AuctionItemData> data = new ArrayList<AuctionItemData>();
-		for(int i = 1;i < index;i ++) {
-			String path = "item" + i;
-			int time = getIntData(path + ".time");
-			time ++;
-			if(time != 7){
-				setData(path + ".time",time);
-				continue;
-			}
-			UUID uuid = UUID.fromString(getStringData(path + ".UUID"));
-			int price = getIntData(path + ".price");
-			int id = getIntData(path + ".id");
-			ItemStack item = getItem(path + ".NBT");
-			data.add(new AuctionItemData(price,time,item,uuid,id));
-			removeItem(id);
-		}
-		return data;
-	}
 	
 	public void removeItem(int id){	
 		int maxindex = getNextIndex("item");
@@ -129,14 +82,12 @@ public class AuctionDatabase extends DataConfig{
 			String path = "item" + i;
 			String path2 = "item" + (i - 1);
 			int price = getIntData(path + ".price");
-			int time = getIntData(path + ".time");
 			int id1 = getIntData(path + ".id");
 			ItemStack item = getItem(path + ".NBT");
 			UUID uuid = UUID.fromString(getStringData(path + ".UUID"));
 			setData(path2 + ".UUID",uuid.toString());
 			setData(path2 + ".NBT",item);
 			setData(path2 + ".id",id1);
-			setData(path2 + ".time",time);
 			setData(path2 + ".price",price);
 		}
 		String path = "item" + (maxindex - 1);

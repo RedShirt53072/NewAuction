@@ -2,8 +2,8 @@ package com.gmail.akashirt53072.newauctions.nbt;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.gmail.akashirt53072.newauctions.ItemType;
 import com.gmail.akashirt53072.newauctions.Main;
+import com.gmail.akashirt53072.newauctions.datatype.ItemType;
 
 
 

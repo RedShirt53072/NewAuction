@@ -1,5 +1,7 @@
 package com.gmail.akashirt53072.newauctions.gui;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -8,6 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import com.gmail.akashirt53072.newauctions.Main;
+import com.gmail.akashirt53072.newauctions.config.AuctionDatabase;
+import com.gmail.akashirt53072.newauctions.config.PreAddDatabase;
+import com.gmail.akashirt53072.newauctions.datatype.PlayerItemData;
+import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 
 public class GuiSellConfirm extends Gui{
@@ -43,7 +49,28 @@ public class GuiSellConfirm extends Gui{
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);
 			close();
 			//非同期でキャッシュ削除、購入リスト登録、新規出品開く処理をする
-			
+			UUID uuid = player.getUniqueId();
+			NBTAddItem nbt = new NBTAddItem(plugin,player);
+			int price = nbt.getPrice();
+			nbt.addSellingItem(1);
+			nbt.setPreItem(false);
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+	            @Override
+	            public void run() {
+	            	//out of minecraft
+	            	PreAddDatabase preDatabase = new PreAddDatabase(plugin);
+	            	PlayerItemData itemData = preDatabase.getPlayerItem(uuid);
+	            	preDatabase.removeItem(uuid);
+	            	new AuctionDatabase(plugin).addItem(uuid, itemData.getItem(), price);
+	            	Bukkit.getScheduler().runTask(plugin, new Runnable() {
+	                    @Override
+	                    public void run() {
+	                    	//in minecraft
+	                    	new GuiSellList(plugin,player).create();
+	                    }
+	            	});
+	            }
+	        });
 			break;
 		case 15:
 			player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1, 1);

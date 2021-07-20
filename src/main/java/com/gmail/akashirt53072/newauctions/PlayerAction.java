@@ -6,8 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.akashirt53072.newauctions.datatype.ItemType;
 import com.gmail.akashirt53072.newauctions.gui.GuiAddItem;
 import com.gmail.akashirt53072.newauctions.gui.GuiBuyConfirm;
 import com.gmail.akashirt53072.newauctions.gui.GuiBuyItem;
@@ -21,6 +23,7 @@ import com.gmail.akashirt53072.newauctions.gui.GuiSellConfirm;
 import com.gmail.akashirt53072.newauctions.gui.GuiSellList;
 import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
+import com.gmail.akashirt53072.newauctions.nbt.NBTItemType;
 
 import java.util.ArrayList;
 
@@ -93,14 +96,22 @@ public final class PlayerAction implements Listener {
         GuiID id = new NBTGui(plugin,player).getID();
         switch(id) {
         case BUYLIST:
+    		event.setCancelled(true);
     		GuiBuyList menu1 = new GuiBuyList(plugin,player);
-    		menu1.onClick(slot);
-            event.setCancelled(true);
+    		ItemStack item1 = event.getCurrentItem();
+    		if(item1 == null) {
+    			break;
+    		}
+    		if(new NBTItemType(plugin,item1).getType().equals(ItemType.AUCTIONITEM)) {
+    			menu1.onBuyClick(item1);
+    		}else {
+    			menu1.onClick(slot);
+    		}
             break;
         case BUYITEM:
     		GuiBuyItem menu2 = new GuiBuyItem(plugin,player);
     		menu2.onClick(slot);
-            event.setCancelled(true);
+    		event.setCancelled(true);
             break;
         case BUYCONFIRM:
     		GuiBuyConfirm menu3 = new GuiBuyConfirm(plugin,player);
@@ -108,9 +119,17 @@ public final class PlayerAction implements Listener {
             event.setCancelled(true);
             break;
         case SELLLIST:
-    		GuiSellList menu4 = new GuiSellList(plugin,player);
-    		menu4.onClick(slot);
             event.setCancelled(true);
+    		GuiSellList menu4 = new GuiSellList(plugin,player);
+    		ItemStack item4 = event.getCurrentItem();
+    		if(item4 == null) {
+    			break;
+    		}
+    		if(new NBTItemType(plugin,item4).getType().equals(ItemType.AUCTIONITEM)) {
+    			menu4.onBuyClick(item4);
+    		}else {
+    			menu4.onClick(slot);
+    		}
             break;
         case ITEMSOLD:
     		GuiItemSold menu5 = new GuiItemSold(plugin,player);
@@ -142,7 +161,8 @@ public final class PlayerAction implements Listener {
                         @Override
                         public void run() {
                         	//in minecraft
-                        	player.getOpenInventory().getBottomInventory().remove(item);
+                        	Inventory inv = player.getOpenInventory().getBottomInventory();
+                        	inv.clear(inv.first(item));
                         }
                 	});
     			}

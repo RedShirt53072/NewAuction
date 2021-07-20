@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.gmail.akashirt53072.newauctions.ItemType;
 import com.gmail.akashirt53072.newauctions.Main;
+import com.gmail.akashirt53072.newauctions.datatype.ItemType;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 import com.gmail.akashirt53072.newauctions.nbt.NBTItemType;
 

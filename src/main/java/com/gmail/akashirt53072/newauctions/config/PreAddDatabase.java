@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import com.gmail.akashirt53072.newauctions.PlayerItemData;
+import com.gmail.akashirt53072.newauctions.datatype.PlayerItemData;
 
 
 public class PreAddDatabase extends DataConfig{
@@ -18,8 +18,8 @@ public class PreAddDatabase extends DataConfig{
 		String path = "item";
 		int index = getNextIndex(path);
 		path = path + index;
-		super.setData(path + ".UUID",uuid.toString());
-		super.setData(path + ".NBT",nbt);
+		setData(path + ".UUID",uuid.toString());
+		setData(path + ".NBT",nbt);
 	}
 	
 	public PlayerItemData getPlayerItem(UUID uuid){	
@@ -51,11 +51,11 @@ public class PreAddDatabase extends DataConfig{
 				String path2 = "item" + (j - 1);
 				ItemStack item = getItem(path1 + ".NBT");
 				UUID uuid1 = UUID.fromString(getStringData(path1 + ".UUID"));
-				super.setData(path2 + ".UUID",uuid1.toString());
-				super.setData(path2 + ".NBT",item);
+				setData(path2 + ".UUID",uuid1.toString());
+				setData(path2 + ".NBT",item);
 			}
 			String pathend = "item" + (maxindex - 1);
-			super.setData(pathend,null);
+			setData(pathend,null);
 			break;
 		}
 		
