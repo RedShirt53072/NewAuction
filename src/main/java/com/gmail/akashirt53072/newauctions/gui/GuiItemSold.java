@@ -122,11 +122,9 @@ public class GuiItemSold extends Gui{
 	                    	//in minecraft
 	            			new GuiSellList(plugin,player).create();
 	            			Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-	            			Objective obj = board.getObjective("emerald");
+	            			Objective obj = board.getObjective("vil_score");
 	            			Score score = obj.getScore(player.getName());
-	            			int now = score.getScore();
-	            			now += price;
-	            			score.setScore(now);
+	            			score.setScore(price);
 	                    }
 	            	});
 	            }

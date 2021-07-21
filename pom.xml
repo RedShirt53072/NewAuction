@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.gmail.akashirt53072</groupId>
   <artifactId>NewAuctions</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
+  <version>0.0.2-STELLA</version>
 	<repositories>
         <repository>
             <id>spigot-repo</id>
@@ -17,6 +17,13 @@
             <artifactId>spigot-api</artifactId>
             <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>stella.spigot.plugin.sqlbankapi</groupId>
+            <artifactId>BankAPI</artifactId>
+            <version>1.2.1</version>
+            <scope>system</scope>
+            <systemPath>C:/Users/akash/Downloads/SqlBankApi-1.2.1-RELEASE-all.jar</systemPath>
         </dependency>
     </dependencies>
     <properties>

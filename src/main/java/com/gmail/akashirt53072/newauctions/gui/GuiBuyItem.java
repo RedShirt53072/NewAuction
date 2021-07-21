@@ -26,6 +26,10 @@ import com.gmail.akashirt53072.newauctions.nbt.NBTBuyList;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 import com.gmail.akashirt53072.newauctions.nbt.NBTItemType;
 
+import stella.plugin.spigot.sqlbankapi.account.Account;
+import stella.plugin.spigot.sqlbankapi.account.PersonalAccount;
+import stella.plugin.spigot.sqlbankapi.bank.Bank;
+
 public class GuiBuyItem extends Gui{
 	public GuiBuyItem(Main plugin, Player player) {
 		super(plugin, player);
@@ -89,6 +93,7 @@ public class GuiBuyItem extends Gui{
                 		meta.setLore(loreData);
                 		item.setItemMeta(meta);
                 		inv.setItem(13, item);
+                		//
                 		Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
             			Objective obj = board.getObjective("emerald");
             			Score score = obj.getScore(player.getName());
@@ -127,10 +132,21 @@ public class GuiBuyItem extends Gui{
 	                    		new GuiBuyList(plugin,player).create();
 	                    		return;
 	                    	}
-	                    	Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-	            			Objective obj = board.getObjective("emerald");
-	            			Score score = obj.getScore(player.getName());
-	            			int now = score.getScore();
+	                    	PersonalAccount acc = null;
+	                    	for(Account ac : Bank.INSTANCE.getPersonalBank().getAllAccount()){
+	                            if(ac instanceof PersonalAccount){
+	                                PersonalAccount pac = (PersonalAccount) ac;
+	                                if(pac.getMCID() != null && pac.getMCID().equalsIgnoreCase(player.getName())){
+	                                    acc = pac;
+	                                    break;
+	                                }
+	                            }
+	                        }
+	                    	if(acc == null) {
+	            				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, (float)0.5);
+	            				return;
+	            			}
+	                    	int now = acc.getBalance().getAmount().intValue();
 	            			if(data.getPrice() > now) {
 	            				player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, (float)0.5);
 	            				return;

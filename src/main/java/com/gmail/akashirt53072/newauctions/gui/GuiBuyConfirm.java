@@ -85,9 +85,9 @@ public class GuiBuyConfirm extends Gui{
 	                    	new StorageSystem(plugin,player).giveItem(items);
 	                    	//送金
 	            			Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-	            			Objective obj = board.getObjective("emerald");
+	            			Objective obj = board.getObjective("vil_score");
 	            			Score score = obj.getScore(player.getName());
-	            			int now = score.getScore();
+	            			int now = 0;
 	            			now -= data.getPrice();
 	            			score.setScore(now);
 	                    	new GuiBuyList(plugin,player).create();
