@@ -64,8 +64,9 @@ public class StorageSystem {
 			return;
 		}
 		TextComponent message = new TextComponent();
-		message.addExtra(ChatColor.YELLOW + "ストレージに" + count + "個の未回収のアイテムが残っています");
+		message.addExtra(ChatColor.WHITE + "ここをクリックでアイテムを取り出す");
 		message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/storage"));
+		player.sendMessage(ChatColor.YELLOW + "ストレージに" + count + "個の未回収のアイテムが残っています");
 		player.spigot().sendMessage(message);
 		
 	}
@@ -83,6 +84,11 @@ public class StorageSystem {
                     public void run() {
                     	//in minecraft
                     	Inventory inv = player.getInventory();
+                    	if(data.isEmpty()) {
+                    		new NBTStorage(plugin,player).addCount(-100);
+                    		player.sendMessage(ChatColor.YELLOW + "ストレージは空です");
+                    		return;
+                    	}
                     	ArrayList<PlayerItemData> newData = new ArrayList<PlayerItemData>();
                     	for(int i = 0;i < data.size();i++) {
                 			PlayerItemData itemData = data.get(i);
@@ -105,9 +111,11 @@ public class StorageSystem {
                 			player.sendTitle(ChatColor.RED + "インベントリがいっぱいです！", " ", 0, 30, 20);
                 			player.sendMessage(ChatColor.RED + "インベントリがいっぱいです！");
                 			player.sendMessage(ChatColor.YELLOW + String.valueOf(data.size()) + "個のアイテムがストレージに残っています");
+                			new NBTStorage(plugin,player).addCount(0 - newData.size());
+                    	}else {
+                			new NBTStorage(plugin,player).addCount(-100);
                 		}
                 		//giveできた分データ削除
-                		new NBTStorage(plugin,player).addCount(0 - newData.size());
                 		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                             @Override
                             public void run() {

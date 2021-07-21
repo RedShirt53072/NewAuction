@@ -23,8 +23,8 @@ public class PlayerTick extends BukkitRunnable{
 			new StorageSystem(plugin,player).loop();
 			phase = 0;
 		}
-		if(player.isOnline()) {
-			new PlayerTick(plugin,player,phase).runTaskLater(plugin,1);
-		}
+
+		new PlayerTick(plugin,player,phase).runTaskLater(plugin,1);
+		
 	}
 }

@@ -15,8 +15,8 @@ public class StorageDatabase extends DataConfig{
 		super(plugin,"storagedata.yml");
 	}
 	private int getPlayerIndex(UUID uuid) {
-		int index = getNextIndex("item");
-		for(int i = 0;i < index;i++) {
+		int index = getNextIndex("player");
+		for(int i = 1;i < index;i++) {
 			String path = "player" + i + ".UUID";
 			UUID uuid2 = UUID.fromString(getStringData(path));
 			if(uuid.equals(uuid2)) {
@@ -25,13 +25,14 @@ public class StorageDatabase extends DataConfig{
 		}
 		//new player
 		setData("player" + index + ".id",1);
+		setData("player" + index + ".UUID",uuid.toString());
 		return index;
 	}
 	
 	private int getNextID(int playerIndex) {
 		int id = getIntData("player" + playerIndex + ".id");
 		id ++;
-		setData("player" + playerIndex + "id",id);
+		setData("player" + playerIndex + ".id",id);
 		return id;
 	}
 	
@@ -68,8 +69,8 @@ public class StorageDatabase extends DataConfig{
 				continue;
 			}
 			for(int j = (i + 1);j < maxindex;j ++) {
-				String path1 = "item" + j;
-				String path2 = "item" + (j - 1);
+				String path1 = path + j;
+				String path2 = path + (j - 1);
 				ItemStack item = getItem(path1 + ".NBT");
 				int id1 = getIntData(path1 + ".id");
 				setData(path2 + ".id",id1);

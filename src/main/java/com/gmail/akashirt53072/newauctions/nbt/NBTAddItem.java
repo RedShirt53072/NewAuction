@@ -26,7 +26,15 @@ public class NBTAddItem extends NBTLoader{
     }
     
     public void addSellingItem(int count) {
-    	super.writeInt("sellingItem", count);
+    	int result = super.readInt("sellingItem");
+    	result += count;
+    	if(result < 0){
+    		result = 0;
+    	}
+    	if(result > 15) {
+    		result = 15;
+    	}
+    	super.writeInt("sellingItem", result);
     }
     
     

@@ -15,7 +15,11 @@ public class NBTStorage extends NBTLoader{
     }
     public void addCount(int items) {
     	int now = super.readInt("storageCount");
-    	super.writeInt("storageCount",now + items);
+    	now += items;
+    	if(now < 0){
+    		now = 0;
+    	}
+    	super.writeInt("storageCount",now);
     }
     
     public int getCount() {
