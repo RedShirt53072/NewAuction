@@ -25,8 +25,14 @@ public class StorageSystem {
 	}
 	public void giveItem(ArrayList<ItemStack> items) {
 		Inventory inv = player.getInventory();
-		for(int i = 0;i < items.size();i++) {
-			ItemStack item = items.get(i);
+		int length = items.size();
+		ArrayList<ItemStack> items2 = new ArrayList<ItemStack>();
+		for(ItemStack i : items) {
+			items2.add(i);
+		}
+		
+		for(int i = length - 1;i > -1;i--) {
+			ItemStack item = items2.get(i);
 			if(inv.firstEmpty() == -1) {
 				break;
 			}
@@ -90,7 +96,9 @@ public class StorageSystem {
                     		return;
                     	}
                     	ArrayList<PlayerItemData> newData = new ArrayList<PlayerItemData>();
-                    	for(int i = 0;i < data.size();i++) {
+                    	int length = data.size();
+                    	int length2 = length;
+                    	for(int i = 0;i < length - 1;i++) {
                 			PlayerItemData itemData = data.get(i);
                 			ItemStack item = itemData.getItem();
                 			if(inv.firstEmpty() == -1) {
@@ -98,7 +106,7 @@ public class StorageSystem {
                 			}
                 			inv.addItem(item);
                 			newData.add(itemData);
-                			data.remove(i);
+                			length2 --;
                 		}
                     	if(newData.isEmpty()) {
                 			player.sendTitle(ChatColor.RED + "インベントリがいっぱいです！", " ", 0, 30, 20);
@@ -107,10 +115,10 @@ public class StorageSystem {
             			}else {
             				player.sendMessage(ChatColor.GREEN + String.valueOf(newData.size()) + "個のアイテムをストレージから取り出しました");
             			}
-                    	if(!data.isEmpty()) {
+                    	if(length2 != 0) {
                 			player.sendTitle(ChatColor.RED + "インベントリがいっぱいです！", " ", 0, 30, 20);
                 			player.sendMessage(ChatColor.RED + "インベントリがいっぱいです！");
-                			player.sendMessage(ChatColor.YELLOW + String.valueOf(data.size()) + "個のアイテムがストレージに残っています");
+                			player.sendMessage(ChatColor.YELLOW + String.valueOf(length2) + "個のアイテムがストレージに残っています");
                 			new NBTStorage(plugin,player).addCount(0 - newData.size());
                     	}else {
                 			new NBTStorage(plugin,player).addCount(-100);

@@ -8,6 +8,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.gmail.akashirt53072.newauctions.datatype.ItemType;
 import com.gmail.akashirt53072.newauctions.gui.GuiAddItem;
@@ -21,14 +24,18 @@ import com.gmail.akashirt53072.newauctions.gui.GuiItemExpired;
 import com.gmail.akashirt53072.newauctions.gui.GuiItemSold;
 import com.gmail.akashirt53072.newauctions.gui.GuiSellConfirm;
 import com.gmail.akashirt53072.newauctions.gui.GuiSellList;
+import com.gmail.akashirt53072.newauctions.gui.GuiTrade;
 import com.gmail.akashirt53072.newauctions.nbt.NBTAddItem;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 import com.gmail.akashirt53072.newauctions.nbt.NBTItemType;
+import com.gmail.akashirt53072.newauctions.nbt.NBTTrade;
 
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 public final class PlayerAction implements Listener {
@@ -37,11 +44,65 @@ public final class PlayerAction implements Listener {
     	this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
+
     
     @EventHandler
     public void onPlayerChat(final AsyncPlayerChatEvent event) {
     	Player player = event.getPlayer();
     	GuiID id = new NBTGui(plugin,player).getID();
+    	if(id.equals(GuiID.TRADEPRICE)) {
+    		event.setCancelled(true);
+            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                	//in minecraft
+                    String price = event.getMessage();
+                    //チャット処理
+                    int length = price.length();
+                    if(length == 0 || length > 10) {
+                    	player.sendMessage(ChatColor.RED + price + "は長すぎます");
+                    	new GuiTrade(plugin,player).onReturn();
+                    	return;
+                    }
+                    ArrayList<String> numberData = new ArrayList<String>();
+                    for(int i = 0;i < price.length();i ++) {
+                     	char c = price.charAt(i);
+                     	String ca = String.valueOf(c);
+                     	if(ca.matches("[0-9]")) {
+                     		numberData.add(ca);
+                     	}
+                    }
+                    if(numberData.isEmpty()) {
+                    	player.sendMessage(ChatColor.RED + price + "には数字がありません");
+                    	new GuiTrade(plugin,player).onReturn();
+                    	return;
+                    }
+                    int result = 0;
+                    int size = numberData.size();
+                    for(int i = 0;i < size;i ++) {
+                    	int m = (int)Math.pow(10, size - 1 - i);
+                    	 result += Integer.valueOf(numberData.get(i)) * m;
+                    }
+                    if(result < 1) {
+                    	player.sendMessage(ChatColor.RED + price + "は0以下です");
+                    	new GuiTrade(plugin,player).onReturn();
+                    	return;
+                    }
+                    Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
+        			Objective obj = board.getObjective("emerald");
+        			Score score = obj.getScore(player.getName());
+        			int now = score.getScore();
+        			if(result > now) {
+        				player.sendMessage(ChatColor.RED + "あなたは" + price + "$のお金を持っていません");
+        				return;
+        			}
+        			new NBTTrade(plugin,player).setPrice(result);
+                    new GuiTrade(plugin,player).onReturn();
+                }
+        	});
+        
+    		return;
+    	}
         if(!id.equals(GuiID.EDITPRICE)) {
         	return;
         }
@@ -174,6 +235,32 @@ public final class PlayerAction implements Listener {
     		menu10.onClick(slot);
             event.setCancelled(true);
             break;
+        case TRADE:
+            event.setCancelled(true);
+    		GuiTrade menu11 = new GuiTrade(plugin,player);
+    		ItemStack item2 = event.getCurrentItem();
+    		if(slot > 53) {
+    			if(menu11.onInvClick(item2)) {
+    				Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                        	//in minecraft
+                        	Inventory inv = player.getOpenInventory().getBottomInventory();
+                        	inv.clear(inv.first(item2));
+                        }
+                	});
+    			}
+    			break;
+    		}
+    		if(item2 == null) {
+    			break;
+    		}
+    		if(new NBTItemType(plugin,item2).getType().equals(ItemType.TRADEITEM)) {
+    			menu11.onItemClick(item2);
+    		}else {
+    			menu11.onClick(slot);
+    		}
+    		break;
         default:
         }
     }
@@ -222,6 +309,10 @@ public final class PlayerAction implements Listener {
         case SELLCONFIRM:
     		GuiSellConfirm menu10 = new GuiSellConfirm(plugin,player);
     		menu10.onClose();
+            break;
+        case TRADE:
+        	GuiTrade menu11 = new GuiTrade(plugin,player);
+    		menu11.onClose();
             break;
         default:
         }

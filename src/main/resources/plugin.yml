@@ -11,6 +11,10 @@ commands:
     description: open auction
     usage: /auction
     permission: newauction.normal
+  trade:
+    description: send trade
+    usage: /auction <player name>
+    permission: newauction.normal
 permissions:
   newauction.normal:
     description: all player

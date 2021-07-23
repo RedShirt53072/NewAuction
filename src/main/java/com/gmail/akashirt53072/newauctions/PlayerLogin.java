@@ -7,6 +7,7 @@ import com.gmail.akashirt53072.newauctions.nbt.NBTBuyList;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGeneral;
 import com.gmail.akashirt53072.newauctions.nbt.NBTGui;
 import com.gmail.akashirt53072.newauctions.nbt.NBTStorage;
+import com.gmail.akashirt53072.newauctions.nbt.NBTTrade;
 
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -33,6 +34,7 @@ public final class PlayerLogin implements Listener {
         	new NBTAddItem(plugin,player).init();
         	new NBTBuyList(plugin,player).init();
         	new NBTStorage(plugin,player).init();
+    		new NBTTrade(plugin,player).init();
     	}
     	new PlayerTick(plugin,player,0).runTaskLater(plugin, 1);
     }

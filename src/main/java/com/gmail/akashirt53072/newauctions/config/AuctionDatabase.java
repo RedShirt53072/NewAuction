@@ -23,7 +23,13 @@ public class AuctionDatabase extends DataConfig{
 	public int getIndex() {
 		return getNextIndex("item") - 1;
 	}
+	public int getDay() {
+		return getIntData("day");
+	}
 	
+	public void setDay(int day) {
+		setData("day",day);
+	}
 	public void addItem(UUID uuid,ItemStack nbt,int price){	
 		String path = "item";
 		int index = getNextIndex(path);
